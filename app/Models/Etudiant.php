@@ -18,6 +18,7 @@ class Etudiant extends Model
         'email',
         'mot_de_passe',
         'photo',
+         'date_de_naissance',
     ];
 
     public function evaluations()

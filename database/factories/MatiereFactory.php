@@ -1,23 +1,21 @@
 <?php
+// database/factories/MatiereFactory.php
 
 namespace Database\Factories;
 
+use App\Models\Matiere;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Matiere>
- */
 class MatiereFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Matiere::class;
+
+    public function definition()
     {
         return [
-            //
+            'libelle' => $this->faker->word,
+            'date_debut' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'date_fin' => $this->faker->dateTimeBetween('now', '+1 year'),
         ];
     }
 }

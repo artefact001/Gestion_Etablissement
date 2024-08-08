@@ -13,6 +13,7 @@ class Matiere extends Model
         'libelle',
         'date_debut',
         'date_fin',
+         'ue_id',
     ];
 
     public function ues()

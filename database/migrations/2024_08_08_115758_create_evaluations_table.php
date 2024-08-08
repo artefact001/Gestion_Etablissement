@@ -12,8 +12,8 @@ class CreateEvaluationsTable extends Migration
             $table->id();
             $table->date('date');
             $table->float('valeur');
-            $table->foreignId('etudiant_id')->constrained()->onDelete('cascade'); // Foreign key to Etudiant
-            $table->foreignId('matiere_id')->constrained()->onDelete('cascade'); // Foreign key to Matiere
+            $table->foreignId('etudiant_id')->constrained()->onDelete('cascade');
+            $table->foreignId('matiere_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

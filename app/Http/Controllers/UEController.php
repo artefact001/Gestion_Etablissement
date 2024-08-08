@@ -3,64 +3,49 @@
 namespace App\Http\Controllers;
 
 use App\Models\UE;
-use App\Http\Requests\StoreUERequest;
-use App\Http\Requests\UpdateUERequest;
+use Illuminate\Http\Request;
 
 class UEController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return UE::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'libelle' => 'required|string|max:255',
+            'date_debut' => 'required|date',
+            'date_fin' => 'required|date',
+            'coef' => 'required|numeric',
+        ]);
+
+        return UE::create($validated);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreUERequest $request)
+    public function show(UE $ue)
     {
-        //
+        return $ue;
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(UE $uE)
+    public function update(Request $request, UE $ue)
     {
-        //
+        $validated = $request->validate([
+            'libelle' => 'sometimes|required|string|max:255',
+            'date_debut' => 'sometimes|required|date',
+            'date_fin' => 'sometimes|required|date',
+            'coef' => 'sometimes|required|numeric',
+        ]);
+
+        $ue->update($validated);
+
+        return $ue;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UE $uE)
+    public function destroy(UE $ue)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateUERequest $request, UE $uE)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UE $uE)
-    {
-        //
+        $ue->delete();
+        return response()->noContent();
     }
 }

@@ -1,66 +1,77 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\etudiant;
-use App\Http\Requests\StoreetudiantRequest;
-use App\Http\Requests\UpdateetudiantRequest;
+use App\Models\Etudiant;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EtudiantController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return Etudiant::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'prenom' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
+            'adresse' => 'required|string|max:255',
+            'telephone' => 'required|string|max:15',
+            'matricule' => 'required|string|unique:etudiants|max:10',
+            'email' => 'required|string|email|max:255|unique:etudiants',
+            'mot_de_passe' => 'required|string|min:8',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'date_de_naissance' => 'required|date',
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+
+        return Etudiant::create($validated);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreetudiantRequest $request)
+    public function show(Etudiant $etudiant)
     {
-        //
+        return $etudiant;
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(etudiant $etudiant)
+    public function update(Request $request, Etudiant $etudiant)
     {
-        //
+        $validated = $request->validate([
+            'prenom' => 'sometimes|required|string|max:255',
+            'nom' => 'sometimes|required|string|max:255',
+            'adresse' => 'sometimes|required|string|max:255',
+            'telephone' => 'sometimes|required|string|max:15',
+            'matricule' => 'sometimes|required|string|unique:etudiants,matricule,'.$etudiant->id.'|max:10',
+            'email' => 'sometimes|required|string|email|max:255|unique:etudiants,email,'.$etudiant->id,
+            'mot_de_passe' => 'sometimes|required|string|min:8',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'date_de_naissance' => 'sometimes|required|date',
+        ]);
+
+        if ($request->hasFile('photo')) {
+            if ($etudiant->photo) {
+                Storage::delete('public/' . $etudiant->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+
+        $etudiant->update($validated);
+
+        return $etudiant;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(etudiant $etudiant)
+    public function destroy(Etudiant $etudiant)
     {
-        //
-    }
+        if ($etudiant->photo) {
+            Storage::delete('public/' . $etudiant->photo);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateetudiantRequest $request, etudiant $etudiant)
-    {
-        //
-    }
+        $etudiant->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(etudiant $etudiant)
-    {
-        //
+        return response()->noContent();
     }
 }

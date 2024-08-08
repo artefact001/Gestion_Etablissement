@@ -16,9 +16,9 @@ class CreateEtudiantsTable extends Migration
             $table->string('telephone');
             $table->string('matricule')->unique();
             $table->string('email')->unique();
-            $table->string('mot_de_passe');
+            $table->string('mot_de_passe')->nullable();
             $table->string('photo')->nullable();
-            $table->date('date_de_naissance')->nullable(); // Date de naissance
+            $table->date('date_de_naissance')->nullable();
             $table->timestamps();
         });
     }
